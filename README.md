@@ -21,6 +21,10 @@ Personal resume site in a Novorésumé-style layout. Plain HTML and CSS, no buil
 | `builder/resume.css` | Both templates, screen and print |
 | `builder/builder.css` | Editor interface |
 | `builder/data.js` | Sample resume loaded on first visit |
+| `builder/manifest.webmanifest`, `builder/icons/` | Lets browsers install the builder as an app |
+| `builder/sw.js` | Offline support: caches the app, fonts and the drag-and-drop library |
+
+The builder can be installed from Chrome or Edge (the **Install** button, or the install icon in the address bar) and on phones through **Add to Home Screen**. After the first visit it opens without an internet connection. App files refresh in the background, so a new version shows up on the next launch.
 
 ## Publish with GitHub Pages
 
