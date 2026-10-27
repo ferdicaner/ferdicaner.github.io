@@ -47,6 +47,7 @@
   const pdfDialog = $("#pdfDialog");
   const statusEl = $("#status");
   const toastEl = $("#toast");
+  const installBtn = $("#installBtn");
 
   const uid = () => Math.random().toString(36).slice(2, 10);
   const str = (v) => (typeof v === "string" ? v : v == null ? "" : String(v));
@@ -754,6 +755,13 @@
       case "close-dialog":
         pdfDialog.close();
         break;
+      case "install":
+        if (installPrompt) {
+          installPrompt.prompt();
+          installPrompt = null;
+          installBtn.hidden = true;
+        }
+        break;
       case "view":
         app.dataset.view = el.dataset.value;
         document.querySelectorAll('[data-action="view"]').forEach((b) => b.setAttribute("aria-pressed", String(b === el)));
@@ -775,6 +783,28 @@
 
   window.addEventListener("pagehide", save);
   new ResizeObserver(fitPreview).observe(preview);
+
+  /* Installable app and offline support */
+
+  let installPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    installPrompt = e;
+    installBtn.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    installBtn.hidden = true;
+    toast("Resume Builder installed");
+  });
+
+  window.addEventListener("offline", () => toast("You're offline. Editing and saving still work."));
+
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
 
   refreshSwitcher();
   renderEditor();
