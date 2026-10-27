@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resume Builder</title>
+  <meta name="description" content="Edit resumes with a live preview, two templates, and PDF export. Everything stays in your browser.">
+  <meta name="theme-color" content="#313d4f">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Roboto:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,700;1,400&family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="builder.css">
+  <link rel="stylesheet" href="resume.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-grip" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+
+<div class="app" id="app" data-view="edit">
+  <header class="topbar">
+    <a class="brand" href="../" title="Back to resume site">
+      <span class="mark">FB</span>
+      <span class="brand-name">Resume Builder</span>
+    </a>
+
+    <div class="switcher">
+      <label class="sr-only" for="resumeSelect">Current resume</label>
+      <select id="resumeSelect"></select>
+      <button class="icon-btn" type="button" data-action="new-resume" title="New resume" aria-label="New resume"><svg class="i"><use href="#i-plus"/></svg></button>
+      <button class="icon-btn" type="button" data-action="duplicate-resume" title="Duplicate resume" aria-label="Duplicate resume"><svg class="i"><use href="#i-copy"/></svg></button>
+      <button class="icon-btn danger" type="button" data-action="delete-resume" title="Delete resume" aria-label="Delete resume"><svg class="i"><use href="#i-trash"/></svg></button>
+    </div>
+
+    <span class="status" id="status" aria-live="polite"></span>
+
+    <div class="top-actions">
+      <button class="btn" type="button" data-action="import" title="Import a resume from a JSON file"><svg class="i"><use href="#i-upload"/></svg><span class="label">Import</span></button>
+      <button class="btn" type="button" data-action="export" title="Download this resume as a JSON file"><svg class="i"><use href="#i-file"/></svg><span class="label">Export</span></button>
+      <button class="btn primary" type="button" data-action="pdf"><svg class="i"><use href="#i-download"/></svg>PDF</button>
+    </div>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+  </header>
+
+  <div class="workspace">
+    <main class="editor" id="editor" aria-label="Resume editor"></main>
+    <div class="preview" id="preview" aria-label="Resume preview">
+      <div class="paper-wrap" id="paperWrap"><div id="paper"></div></div>
+    </div>
+  </div>
+
+  <nav class="mobile-tabs" aria-label="View">
+    <button class="btn" type="button" data-action="view" data-value="edit" aria-pressed="true"><svg class="i"><use href="#i-edit"/></svg>Edit</button>
+    <button class="btn" type="button" data-action="view" data-value="preview" aria-pressed="false"><svg class="i"><use href="#i-eye"/></svg>Preview</button>
+  </nav>
+</div>
+
+<dialog id="pdfDialog">
+  <h2>Save as PDF</h2>
+  <ol>
+    <li>In the print window, set <b>Destination</b> to <b>Save as PDF</b>.</li>
+    <li>Under <b>More settings</b>, turn off <b>Headers and footers</b>.</li>
+    <li>Keep paper size <b>Letter</b> and margins <b>Default</b>, then save.</li>
+  </ol>
+  <div class="dialog-actions">
+    <label><input type="checkbox" id="pdfDontAsk"> Don't show again</label>
+    <div>
+      <button class="btn" type="button" data-action="close-dialog">Cancel</button>
+      <button class="btn primary" type="button" data-action="print">Open print window</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script src="data.js"></script>
+<script src="render.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
