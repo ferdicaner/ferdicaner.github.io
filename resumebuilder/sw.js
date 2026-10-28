@@ -100,7 +100,9 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.origin === self.location.origin) {
-    if (url.pathname.startsWith(new URL("./", self.location).pathname)) event.respondWith(appResponse(event));
+    // The resume site in resume/ shares this folder but is not part of the app.
+    const scope = new URL("./", self.location).pathname;
+    if (url.pathname.startsWith(scope) && !url.pathname.startsWith(scope + "resume/")) event.respondWith(appResponse(event));
   } else if (EXTERNAL_HOSTS.has(url.host)) {
     event.respondWith(externalResponse(event.request));
   }
