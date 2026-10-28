@@ -11,20 +11,22 @@ Personal resume site in a Novorésumé-style layout. Plain HTML and CSS, no buil
 
 ## Resume Builder
 
-`builder/` is a separate editor at `/builder/`: a form on the left, a live preview on the right, two templates (header block and sidebar), accent color and font choice, drag-and-drop ordering, several resumes, JSON import/export, and PDF through the browser's print window. Everything is stored in the visitor's own browser; nothing is sent anywhere.
+`resumebuilder/` is a separate editor at `/resumebuilder/`: a form on the left, a live preview on the right, two templates (header block and sidebar), accent color and font choice, drag-and-drop ordering, several resumes, JSON import/export, and PDF through the browser's print window. Everything is stored in the visitor's own browser; nothing is sent anywhere.
 
 | File | Purpose |
 | --- | --- |
-| `builder/index.html` | Page shell |
-| `builder/app.js` | Editor, storage, import/export, printing |
-| `builder/render.js` | Turns resume data into template HTML |
-| `builder/resume.css` | Both templates, screen and print |
-| `builder/builder.css` | Editor interface |
-| `builder/data.js` | Sample resume loaded on first visit |
-| `builder/manifest.webmanifest`, `builder/icons/` | Lets browsers install the builder as an app |
-| `builder/sw.js` | Offline support: caches the app, fonts and the drag-and-drop library |
+| `resumebuilder/index.html` | Page shell |
+| `resumebuilder/app.js` | Editor, storage, import/export, printing |
+| `resumebuilder/render.js` | Turns resume data into template HTML |
+| `resumebuilder/resume.css` | Both templates, screen and print |
+| `resumebuilder/builder.css` | Editor interface |
+| `resumebuilder/data.js` | Sample resume loaded on first visit |
+| `resumebuilder/manifest.webmanifest`, `resumebuilder/icons/` | Lets browsers install the builder as an app |
+| `resumebuilder/sw.js` | Offline support: caches the app, fonts and the drag-and-drop library |
 
 The builder can be installed from Chrome or Edge (the **Install** button, or the install icon in the address bar) and on phones through **Add to Home Screen**. After the first visit it opens without an internet connection. App files refresh in the background, so a new version shows up on the next launch.
+
+`builder/` holds only a redirect from the builder's old address and a service worker that removes the offline copy installed there. Delete the folder once nobody uses the old address.
 
 ## Publish with GitHub Pages
 
